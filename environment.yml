@@ -1,0 +1,10 @@
+name: cinnamon
+channels:
+  - conda-forge
+dependencies:
+  - python
+  - cmake
+  - tqdm
+  - numpy
+  - requests
+  - packaging
