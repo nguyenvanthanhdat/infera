@@ -1,6 +1,18 @@
 # Cinnamon Runtime
 Cross-platform ML/DL inference library optimized for edge computer vision and natural language processing tasks. 
 
+## Development Setup
+Use conda/mamba environment for package compatible resolved.
+```bash
+mamba env create -f environment.yml
+mamba activate cinnamon
+# See detail and choose installation.
+python install_deps.py -h
+```
+**Notice:** remove your system installed CUDA and CuDNN because they may cause errors when build for GPUs.
+```bash
+sudo apt-get remove --auto-remove nvidia-cuda-toolkit
+```
 ## License
 There are two licensing options to accommodate diverse use case:
 
