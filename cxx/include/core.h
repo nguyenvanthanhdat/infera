@@ -46,6 +46,18 @@ namespace cinrt::model
   public:
     std::shared_ptr<Ort::Value> run(const Ort::Value& inputs);
   };
+
+
+  class ModelManager
+  {
+    protected:
+      std::map<std::string, std::shared_ptr<Model>> _models;
+
+    public:
+      Model* createModel(std::string model,)
+      Model* getModel(std::string model);
+      void delModel(std::string model);
+  }
 };
 
 #endif
