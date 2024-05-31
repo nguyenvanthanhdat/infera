@@ -16,7 +16,12 @@ void Run_session(ORTManager &ortManager, Ort::Value &inputTensor, Ort::Value &ou
 }
 
 
-static void BM_Run_Function(benchmark::State& state) {
+template <class ...Args>
+
+static void BM_Function(benchmark::State& state, Args&&... args) {
+    //get args tuple
+    auto args_tuple = std::make_tuple(std::move(args)...);
+
     // This code gets timed
     using std::chrono::steady_clock;
     using std::chrono::duration_cast;
@@ -111,19 +116,17 @@ static void BM_Run_Function(benchmark::State& state) {
     
     ORTManager ortManager;
     std::string sessionName = "test";
-    std::string threadOption = "inter_intra";
-    std::string execution = "sequential";
     std::string mode = "async";
     std::string optimize_path = "";
 
     ortManager.createSession(
         sessionName, 
         modelPath, 
-        threadOption,
+        std::get<0>(args_tuple), //threadOptions
         state.range(0), //optmize_level
         optimize_path, 
         mode, 
-        execution, 
+        std::get<1>(args_tuple), //execution
         state.range(1) //num_thread
     );
     // Perform setup here
@@ -140,7 +143,7 @@ static void BM_Run_Function(benchmark::State& state) {
 
 
 // Register the function as a benchmark
-BENCHMARK(BM_Run_Function)->ArgsProduct({
+BENCHMARK_CAPTURE(BM_Function, yolov7hf-test, std::string("inter_intra"), std::string("sequential"))->ArgsProduct({
     { 0, 1, 2, 3},
     { 0, 1, 2, 3, 4 }
 })->Unit(
