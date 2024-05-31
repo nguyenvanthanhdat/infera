@@ -70,7 +70,7 @@ Currently, benchmark is run on `optimizerLevel` and `numThreads` with following 
 **Make file and run benchmark**
 ```
 $ make
-$ ./runExample 
+$ ./runExample <extended>
 ```
 You can extend config benchmark for more test in [User_Guide](https://google.github.io/benchmark/user_guide.html)
 
