@@ -28,21 +28,12 @@ static void BM_Run_Function(benchmark::State& state) {
     Ort::Session session(nullptr);
 
     constexpr int64_t numChannels = 3;
-    // constexpr int64_t width = 256;
-    // constexpr int64_t height = 256;
-    // change to 640x640
     constexpr int64_t width = 640;
     constexpr int64_t height = 640;
     constexpr int64_t numPixels = width * height;
     constexpr int64_t numElements = numChannels * numPixels;
 
-    // print present path
-    char cwd[1024];
-    if (getcwd(cwd, sizeof(cwd)) != NULL) {
-        // std::cout << "Current working dir: " << cwd << std::endl;
-    } else {
-        //printf("getcwd() error");
-    }
+    // image path
     const std::string imageFileD = "../tests/sample/8D5U5524_D.png"; 
     const std::string imageFileS = "../tests/sample/8D5U5524_S.png";
     const std::string imageFileT = "../tests/sample/8D5U5524_T.png";
@@ -56,7 +47,7 @@ static void BM_Run_Function(benchmark::State& state) {
 
     // notificate the user if the image is not loaded
     if (imageD.empty() || imageS.empty() || imageT.empty()) {
-        // std::cout << "Image not loaded.\n";
+        std::cout << "Image not loaded.\n";
     }
 
     int originalWidth = imageD.cols;
@@ -71,52 +62,28 @@ static void BM_Run_Function(benchmark::State& state) {
     imageD = fixedImage(imageD);
     imageS = fixedImage(imageS);
     imageT = fixedImage(imageT);
-    // std::cout << "Image shape: " << imageD.size() << std::endl;
- 
-    // std::cout << std::string(50, '-') << std::endl;
-    // std::cout << "Convert image to vec";
+
     std::vector<std::vector<std::vector<float>>> imagedVec = mat2vec(imaged); //List[List[List[float]]]
     std::vector<std::vector<std::vector<float>>> imagesVec = mat2vec(images);
     std::vector<std::vector<std::vector<float>>> imagetVec = mat2vec(imaget);
     std::vector<std::vector<std::vector<float>>> imageDVec = mat2vec(imageD);
     std::vector<std::vector<std::vector<float>>> imageSVec = mat2vec(imageS);
     std::vector<std::vector<std::vector<float>>> imageTVec = mat2vec(imageT);
-    // std::cout << "Image shape: " << imagedVec.size() << "x" << imagedVec[0].size() << "x" <<  imagedVec[0][0].size() << std::endl;
 
-    // transpose image (channels, newHeight, newWidth) -> (newHeight, newWidth, channels)
-    // std::vector<int> af_shape = {1, 2, 0};
-    // std::vector<std::vector<std::vector<float>>> transposeImageD = transposeImage(
-    //     imageDVec, af_shape);
-    // std::vector<std::vector<std::vector<float>>> transposeImageS = transposeImage(
-    //     imageSVec, af_shape);
-    // std::vector<std::vector<std::vector<float>>> transposeImageT = transposeImage(
-    //     imageTVec, af_shape);
-    // std::cout << "Transposed image shape: " << transposeImageD.size() << "x" << transposeImageD[0].size() << "x" <<  transposeImageD[0][0].size() << std::endl;
-    
     // concatenate images shape (3, newHeight, newWidth) -> (3 * 3, newHeight, newWidth)
     std::vector<std::vector<std::vector<float>>> inputMatrix;
-    // inputMatrix.insert(inputMatrix.end(), transposeImageD.begin(), transposeImageD.end());
-    // inputMatrix.insert(inputMatrix.end(), transposeImageS.begin(), transposeImageS.end());
-    // inputMatrix.insert(inputMatrix.end(), transposeImageT.begin(), transposeImageT.end());
-    
+
     inputMatrix.insert(inputMatrix.end(), imagedVec.begin(), imagedVec.end());
     inputMatrix.insert(inputMatrix.end(), imagesVec.begin(), imagesVec.end());
     inputMatrix.insert(inputMatrix.end(), imagetVec.begin(), imagetVec.end());
-    // std::cout << std::string(50, '-') << std::endl;
-    // std::cout << "Concatenate image shape: " << inputMatrix.size() << "x" << inputMatrix[0].size() << "x" <<  inputMatrix[0][0].size() << std::endl;
 
     // define shape
-    // const std::array<int64_t, 4> inputShape = {1, 9, height, width};
     const std::array<int64_t, 4> inputShape = {3, 3, height, width};
-    // const std::array<int64_t, 4> outputShape = {1, 3, height, width};
     const std::array<int64_t, 2> outputShape1 = {0, 7};
     const std::array<int64_t, 2> outputShape2 = {0, 22};
 
     // define array with new shape
-    // std::array<float, static_cast<std::size_t>(newHeight * newWidth * 3 * 3)> input;
-    // std::array<float, newHeight * newWidth> output; // output shape is [batch_size,3,256,256]
     std::vector<float> input(height * width * 3 * 3); // *vectors -> flatten list[list[list[float]]] -> list[float]
-    // std::vector<float> output(height * width * 3);
     std::vector<float> output1(7);
     // std::vector<float> output2(22);
 
@@ -135,17 +102,9 @@ static void BM_Run_Function(benchmark::State& state) {
     Ort::Value inputTensor = Ort::Value::CreateTensor<float>(
         memory_info, input.data(), input.size(), inputShape.data(), inputShape.size()
     );
-    // benchmark::RegisterBenchmark(str::string "Input", BM_test, inputTensor)
-
-    // Ort::Value outputTensor1 = Ort::Value::CreateTensor<float>(
-    //     memory_info, output.data(), output.size(), outputShape.data(), outputShape.size()
-    // );
     Ort::Value outputTensor1 = Ort::Value::CreateTensor<float>(
         memory_info, output1.data(), output1.size(), outputShape1.data(), outputShape1.size()
     );
-    // benchmark::RegisterBenchmark(std::string "Output", BM_test, output1)
-
-    //
     // Ort::Value outputTensor2 = Ort::Value::CreateTensor<float>(
     //     memory_info, output2.data(), output2.size(), outputShape2.data(), outputShape2.size()
     // );
