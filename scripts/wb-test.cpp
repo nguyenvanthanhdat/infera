@@ -42,7 +42,7 @@ static void BM_Run_Function(benchmark::State& state, Args&&... args) {
     const std::string imageFileS = "../tests/sample/8D5U5524_S.png";
     const std::string imageFileT = "../tests/sample/8D5U5524_T.png";
     const std::string outputImage = "../tests/sample/output_1.png";
-    const auto modelPath = "../models/yolov7-headface-v1.onnx";
+    const auto modelPath = "../models/test_wb.onnx";
     
     // load images
     cv::Mat imageD = loadImage(imageFileD);
