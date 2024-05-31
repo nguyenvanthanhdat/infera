@@ -11,11 +11,11 @@
 
 // static std::vector<float> loadImage(const std::string& filename, int sizeX = 256, int sizeY = 256) {
 static cv::Mat loadImage(const std::string& filename) {
-    std::cout << "Loading image: " << filename << "\n";
+    // std::cout << "Loading image: " << filename << "\n";
     cv::Mat image = cv::imread(filename, cv::IMREAD_COLOR);
 
     if (image.empty()) {
-        std::cout << "No image found.";
+        // std::cout << "No image found.";
         return cv::Mat();
     }
 
