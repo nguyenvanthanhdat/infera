@@ -1,0 +1,30 @@
+name: Notify
+
+on:
+  push:
+    branches:
+      - main
+      - develop*
+  pull_request:
+    branches:
+      - main
+      - develop*
+
+jobs:
+  telegram:
+    runs-on: ubuntu-latest
+    steps:
+    - 
+      name: send message
+      uses: appleboy/telegram-action@master
+      with:
+        to: ${{ secrets.TELEGRAM_TO }}
+        token: ${{ secrets.TELEGRAM_TOKEN }}
+        message: |
+            [Github]: ${{ github.repository }}
+            ---
+            ${{ github.actor }} commited:
+            ${{ github.event.commits[0].message }}
+            ---
+            See changes: 
+            https://github.com/${{ github.repository }}/commit/${{github.sha}}
