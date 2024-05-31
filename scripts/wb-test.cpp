@@ -17,7 +17,7 @@ void Run_session(ORTManager &ortManager, Ort::Value &inputTensor, Ort::Value &ou
 
 template <class ...Args>
 
-static void BM_Run_Function(benchmark::State& state, Args&&... args) {
+static void BM_Function(benchmark::State& state, Args&&... args) {
     //get args tuple
     auto args_tuple = std::make_tuple(std::move(args)...);
 
@@ -136,7 +136,7 @@ static void BM_Run_Function(benchmark::State& state, Args&&... args) {
 
 
 // Register the function as a benchmark
-BENCHMARK_CAPTURE(BM_Run_Function, "test_wb", std::string("inter_intra"), std::string("sequential"))->ArgsProduct({
+BENCHMARK_CAPTURE(BM_Function, test_wb, std::string("inter_intra"), std::string("sequential"))->ArgsProduct({
     { 0, 1, 2, 3},
     { 0, 1, 2, 3, 4 }
 })->Unit(
