@@ -1,18 +1,19 @@
 #ifndef __CRT_CORE_H__
 #define __CRT_CORE_H__
 
+#include<map>
 #include<string>
-#include <#include <onnxruntime_cxx_api.h>
+#include<onnxruntime_cxx_api.h>
 
 namespace cinrt::model
 {
   class Model
   {
   protected:
-    std::shared_ptr<ORT::Env> _env;           
-    std::shared_ptr<ORT::Allocator> _allocator;
-    std::unique_ptr<ORT::Session> _session;
-    std::unique_ptr<ORT::SessionOptions> _sessionOptions;
+    std::shared_ptr<Ort::Env> _env;           
+    std::shared_ptr<Ort::Allocator> _allocator;
+    std::unique_ptr<Ort::Session> _session;
+    std::unique_ptr<Ort::SessionOptions> _sessionOptions;
 
   public: 
     Model(
@@ -21,19 +22,19 @@ namespace cinrt::model
       int graphOpLevel = 0, 
       int interThreads = 0, 
       int intraThreads = 0,
-      std::<vector<std::string>> providers = nullptr
+      std::vector<std::string>* providers = nullptr
     );
 
   protected: 
     Model(
-      std::shared_ptr<ORT::Env> env, 
-      std::shared_ptr<ORT::Allocator> allocator, 
+      std::shared_ptr<Ort::Env> env, 
+      std::shared_ptr<Ort::Allocator> allocator, 
       std::string model,
       bool parallel = true,
       int graphOpLevel = 0,
       int interThreads = 0,
       int intraThreads = 0,
-      std::<vector<std::string>> providers = nullptr
+      std::vector<std::string>* providers = nullptr
     );
 
     std::unique_ptr<Ort::SessionOptions> getSessionOptions(
@@ -54,10 +55,10 @@ namespace cinrt::model
       std::map<std::string, std::shared_ptr<Model>> _models;
 
     public:
-      Model* createModel(std::string model,)
+      Model* createModel(std::string model);
       Model* getModel(std::string model);
       void delModel(std::string model);
-  }
+  };
 };
 
 #endif
