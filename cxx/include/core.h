@@ -5,6 +5,7 @@
 #include <map>
 #include <future>
 #include <onnxruntime_cxx_api.h>
+// #include <include/interface.h>
 
 namespace cinrt::model
 {
@@ -49,21 +50,21 @@ namespace cinrt::model
     friend class ModelManager;
 
   public:
-    std::shared_ptr<Ort::Value> run(const Ort::Value& inputs, const Ort::RunOptions runOptions);
+    std::shared_ptr<Ort::Value> run(const Ort::Value& inputs, const Ort::RunOptions& runOptions);
     // std::shared_ptr<Ort::Value> runAsync(const Ort::Value& inputs, std::function<void(std::shared_ptr<Ort::Value>)> callback);
     std::future<std::shared_ptr<Ort::Value>> runAsync(const Ort::Value& inputs, const Ort::RunOptions runOptions);
   };
 
 
-  class ModelManager
+  class modelManager
   {
     protected:
-      std::map<std::string, std::shared_ptr<Model>> _models;
+      std::map<char*, std::shared_ptr<Model>> _models;
 
     public:
-      Model* createModel(std::string model);
-      Model* getModel(std::string model);
-      void delModel(std::string model);
+      Model* createModel(char* model);
+      Model* getModel(char* model);
+      void delModel(char* model);
   };
 };
 
