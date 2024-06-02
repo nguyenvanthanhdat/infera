@@ -22,3 +22,25 @@ This OSI-approved open-source license is ideal for students and enthusiasts, pro
 Designed for commercial use, this license permits seamless integration into commercial goods and services, bypassing the open-source requirements of AGPL-3.0.
 
 Copyright &copy; 2024 [Hieu Pham](https://github.com/hieupth). All rights reserved.
+
+## Project structure
+```
+.
++- docs           // Documents
++- includes       // Public header files
++- lib            // 3rd libraries
++- cmake          // Cmake config files
++- src            // Source code tree
+|  +- headers     // Header files
+|  +- modules     // Platform-independent source
+|  +- blindings   // Bindings to other languages
+|  |  +- rust
+|  |  +- python
+|  |  +- ...
+|  +- platforms   // Platform-specific code
+|  |  +- ios
+|  |  +- android
+|  |  +- ...
++- tests          // Automated test scripts
++- tools          // Development utilities
+```
