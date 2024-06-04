@@ -33,8 +33,6 @@ int main() {
 
         std::shared_ptr<std::vector<Ort::Value>> outputTensor2 = model2->run(inputTensor2);
         float* outputData2 = outputTensor2->at(0).GetTensorMutableData<float>();
-        // std::cout << "1" << std::endl;
-        std::this_thread::sleep_for(std::chrono::seconds(1));
         std::cout << "Model2 output: " << outputData2[0] << std::endl;
     } catch (const std::exception& e) {
         std::cerr << "Exception caught: " << e.what() << std::endl;
