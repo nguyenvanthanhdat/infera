@@ -12,7 +12,7 @@ Ort::Value createMockInput(Ort::MemoryInfo& memoryInfo, int64_t batchSize = 1, i
     const std::array<int64_t, 4> inputShape = {batchSize, channels, height, width};
     std::vector<float> inputValues(batchSize * channels * height * width, 1.0f);
     return Ort::Value::CreateTensor<float>(memoryInfo, inputValues.data(), inputValues.size(), inputShape.data(), inputShape.size());
-}
+}   
 
 int main() {
     std::shared_ptr<Ort::Env> env = std::make_shared<Ort::Env>(ORT_LOGGING_LEVEL_WARNING, "test");

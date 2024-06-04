@@ -62,8 +62,14 @@ namespace cinrt::model
     friend class modelManager;
 
     public:
-    std::shared_ptr<std::vector<Ort::Value>> run(const Ort::Value& inputs, const Ort::RunOptions& runOptions = Ort::RunOptions());
-    std::future<std::shared_ptr<std::vector<Ort::Value>>> runAsync(const Ort::Value& inputs, const Ort::RunOptions runOptions = Ort::RunOptions());
+    std::shared_ptr<std::vector<Ort::Value>> run(
+      const Ort::Value& inputs,
+      std::shared_ptr<const char*> outputHead = nullptr,
+      const Ort::RunOptions& runOptions = Ort::RunOptions());
+    std::future<std::shared_ptr<std::vector<Ort::Value>>> runAsync(
+      const Ort::Value& inputs,
+      std::shared_ptr<const char*> outputHead = nullptr,
+      const Ort::RunOptions runOptions = Ort::RunOptions());
   };
 
 
