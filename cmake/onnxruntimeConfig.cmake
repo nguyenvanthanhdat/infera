@@ -8,7 +8,6 @@
 
 include(FindPackageHandleStandardArgs)
 
-# get_filename_component(CMAKE_CURRENT_LIST_DIR "${CMAKE_CURRENT_LIST_FILE}" PATH)
 get_filename_component(onnxruntime_INSTALL_PREFIX "$ENV{CONDA_PREFIX}" ABSOLUTE)
 
 set(onnxruntime_INCLUDE_DIRS ${onnxruntime_INSTALL_PREFIX}/include/onnxruntime)
