@@ -23,24 +23,30 @@ Designed for commercial use, this license permits seamless integration into comm
 
 Copyright &copy; 2024 [Hieu Pham](https://github.com/hieupth). All rights reserved.
 
-## Project structure
+## Development
+
+### Project structure
+The project structure is compatible with CMakeList.txt file to make that internal source file can simple #include "something.h" while other libraries will #include <cinnamon/something.h> when this library is linked/installed.
 ```
 .
-+- docs           // Documents
-+- includes       // Public header files
-+- lib            // 3rd libraries
-+- cmake          // Cmake config files
-+- src            // Source code tree
-|  +- headers     // Header files
-|  +- modules     // Platform-independent source
-|  +- blindings   // Bindings to other languages
++- docs               // Documents
++- include/cinnamon   // Public header files
++- lib                // 3rd libraries
++- cmake              // Cmake config files
++- src                // Source code tree
+|  +- headers         // Header files
+|  +- modules         // Platform-independent source
+|  +- blindings       // Bindings to other languages
 |  |  +- rust
 |  |  +- python
 |  |  +- ...
-|  +- platforms   // Platform-specific code
+|  +- platforms       // Platform-specific code
 |  |  +- ios
 |  |  +- android
 |  |  +- ...
-+- tests          // Automated test scripts
-+- tools          // Development utilities
++- tests              // Automated test scripts
++- tools              // Development utilities
 ```
+
+### Install Dependencies
+Most dependencies should be built from source to be used with C/C++, and they can be built as conda packages using [Rattler-Build](https://prefix-dev.github.io/rattler-build/latest/). The build recipe file for each library can be found at **tools/deps/[library-name]/recipe.yaml**.

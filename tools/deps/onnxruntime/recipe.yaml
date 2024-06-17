@@ -1,0 +1,72 @@
+context:
+  name: libonnxruntime
+  version: 1.18.0
+  openvino: no
+  openvino_hardware: CPU
+  cuda: no
+  cuda_version: 11.8
+  cuda_arch: "75;80;86"
+  disable_types: float8
+
+package:
+  name: ${{ name|lower }}
+  version: ${{ version }}
+
+source:
+  url: https://github.com/microsoft/onnxruntime/archive/refs/tags/v${{version}}.tar.gz
+  md5: c1e2861cdd75ee91ea294dbf84675963
+
+build:
+  script: |
+    build_args="--config Release --build_shared_lib --update --build --build_wheel --parallel --compile_no_warning_as_error --skip_submodule_sync --skip_tests"
+    cmake_args="--cmake_extra_defines CMAKE_INSTALL_PREFIX=$PREFIX"
+    if [ ${{osx}} ]; then
+      cmake_args = "$cmake_args CMAKE_OSX_ARCHITECTURES=$OSX_ARCH"
+      ./build.sh $build_args $cmake_args
+      cd build/MacOS/Release && make -j$CPU_COUNT && make install && pip install dist/*
+    else
+      if [ "${{openvino}}" == "yes" ]; then 
+        build_args="$build_args --use_openvino ${{openvino_hardware}}";
+      fi;
+      if [ "${{cuda}}" == "yes" ]; then
+        export CPATH=${CONDA_PREFIX}/include:${CPATH}
+        export LD_LIBRARY_PATH=${CONDA_PREFIX}/lib:${LD_LIBRARY_PATH}
+        build_args="$build_args --use_cuda --cuda_version ${{cuda_version}}"
+        build_args="$build_args --cuda_home=${CONDA_PREFIX} --cudnn_home=${CONDA_PREFIX} --disable_types=${{disable_types}}"
+        cmake_args="$cmake_args CMAKE_CUDA_ARCHITECTURES=${{cuda_arch}}"
+      fi;
+      if [ ${{linux}} ]; then
+        ./build.sh $build_args $cmake_args
+        cd build/Linux/Release && make -j$CPU_COUNT && make install && pip install dist/*
+      elif [ ${{win}} ]; then
+        ./build.bat $build_args $cmake_args
+        cd build/Windows/Release && make -j$CPU_COUNT && make install && pip install dist/*
+      fi;
+    fi;
+
+requirements:
+  build:
+    - pip
+    - wheel
+    - setuptools
+    - zlib
+    - cmake
+    - numpy
+    - gtest
+    - openvino
+    - patchelf
+    - packaging
+    - libabseil
+    - libprotobuf<4
+    - flatbuffers~=23.5
+    - if: linux or win 
+      then:
+        - gcc=10
+        - gxx=10
+        - psutil
+        - cudnn
+        - cuda-nvcc~=${{cuda_version}}
+        - cuda-cudart~=${{cuda_version}}
+        - libcublas-dev~=${{cuda_version}}
+        - cuda-libraries-dev~=${{cuda_version}}
+        - sysroot_${{build_platform}}>=2.14
